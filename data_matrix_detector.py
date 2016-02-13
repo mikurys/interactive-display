@@ -8,9 +8,7 @@ __author__ = "Ryszard Mikulec" """
 
 
 class DataMatrixDetector:
-    def __init__(self, video, size=6):
-        self.video = cv2.VideoCapture(video)
-        self.window = cv2.namedWindow("okno", cv2.WINDOW_NORMAL)
+    def __init__(self, size=6):
         self.size = size
         self.frame = None
         self.contours = None
@@ -24,9 +22,6 @@ class DataMatrixDetector:
         self.contours = [contour for contour in template_contours if 5000 < cv2.contourArea(contour) < 100000]
         print(len(self.contours))
 
-    def take_frame(self):
-        ret, self.frame = self.video.read()
-        return ret
 
     def check_matrix(self, matrix):
         for i in range(self.size):
@@ -77,7 +72,8 @@ class DataMatrixDetector:
         im2, contours, hierarchy = cv2.findContours(self.th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         return [contour for contour in contours if 3000 < cv2.contourArea(contour) < 130000]
 
-    def detect_matrix(self):
+    def detect_matrix(self,frame):
+        self.frame = frame[0]
         contours = self.take_contours()
         counter = 0
         for cnt, cnt2 in zip(contours, self.contours):
@@ -91,18 +87,5 @@ class DataMatrixDetector:
                 counter += 1
         if counter == 1:
             self.read_matrix(box)
+        frame = [self.frame]
 
-    def run(self):
-        while True:
-            if self.take_frame():
-                self.detect_matrix()
-                cv2.imshow("okno", self.frame)
-                cv2.waitKey(40)
-            else:
-                break
-
-
-if __name__ == "__main__":
-    detector = DataMatrixDetector(0)
-    detector.set_template("../template.jpg")
-    detector.run()
