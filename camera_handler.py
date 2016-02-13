@@ -109,5 +109,5 @@ if __name__ == "__main__":
     detector = DataMatrixDetector()
     detector.set_template("../template.jpg")
     camera = Camera()
-    camera.OnCapture = detector.detect_matrix
+    camera.OnCapture += detector.detect_matrix
     camera.start()
