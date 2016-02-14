@@ -64,10 +64,10 @@ class Camera(threading.Thread):
         self.frame = [self.frame]
         return ret
 
-    def run(self):   
+    def run(self):
         try:
             self.video = cv2.VideoCapture(self.cam)
-            self.window = cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL) 
+            self.window = cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
         except:
             self.OnError()
             return
@@ -78,8 +78,10 @@ class Camera(threading.Thread):
                     self.OnCapture(self.frame)
                     if self.visible :
                        self.OnUpdate()
-                       cv2.imshow(self.window_name, self.frame[0])               
-                    cv2.waitKey(40)
+                       cv2.imshow(self.window_name, self.frame[0])
+                    if cv2.waitKey(40) == 27:
+                        self.OnClose()
+                        break
                 else:
                     self.OnClose()
                     break

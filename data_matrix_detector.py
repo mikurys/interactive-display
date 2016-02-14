@@ -9,12 +9,13 @@ __author__ = "Ryszard Mikulec" """
 
 
 class DataMatrixDetector:
-    def __init__(self, size=6):
+    def __init__(self, db, size=6):
+        self.info_displayer = InfoDisplayer(db)
         self.size = size
         self.frame = None
         self.contours = None
         self.th = None
-        self.detected = False;
+        self.detected = False
         self.id = None
 
     def set_template(self, template):
@@ -24,7 +25,6 @@ class DataMatrixDetector:
         im, template_contours, hierarchy2 = cv2.findContours(thtemplate, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         self.contours = [contour for contour in template_contours if 5000 < cv2.contourArea(contour) < 100000]
         print(len(self.contours))
-
 
     def check_matrix(self, matrix):
         for i in range(self.size):
@@ -64,35 +64,35 @@ class DataMatrixDetector:
             return None
         if self.check_matrix(matrix):
             print(True)
-            print(DataMatrixCrypto.decode(self.turn_matrix(matrix)))
-            self.detected = True;
+            self.detected = True
+            print(matrix)
             self.id = DataMatrixCrypto.decode(self.turn_matrix(matrix))
+            print(matrix)
+            print(self.id)
+            return True
         else:
-            print(False)
+            self.detected = False
+            return False
 
     def take_contours(self):
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
         ret, self.th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         im2, contours, hierarchy = cv2.findContours(self.th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        return [contour for contour in contours if 3000 < cv2.contourArea(contour) < 130000]
+        return [contour for contour in contours if 1000 < cv2.contourArea(contour) < 150000]
 
-    def detect_matrix(self,frame):
+    def detect_matrix(self, frame):
         self.frame = frame[0]
         contours = self.take_contours()
-        counter = 0
         for cnt, cnt2 in zip(contours, self.contours):
             val = cv2.matchShapes(cnt, cnt2, 1, 0.0)
             if val < 0.2:
                 rect = cv2.minAreaRect(cnt)
                 box = cv2.boxPoints(rect)
                 box = np.int0(box)
-                cv2.drawContours(self.frame, [box], 0, (0, 0, 255), 2)
-                cv2.drawContours(self.frame, cnt, -1, (255, 0, 0), 3)
-                counter += 1
-        if counter == 1:
-            self.read_matrix(box)
+                if self.read_matrix(box):
+                    cv2.drawContours(self.frame, [box], 0, (0, 0, 255), 2)
+                    cv2.drawContours(self.frame, cnt, -1, (255, 0, 0), 3)
         if self.detected == True:
-            InfoDisplayer.display(self.id, self)
+            img = self.info_displayer.display(self.id, self.frame)
         frame = [self.frame]
-

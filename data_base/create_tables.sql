@@ -1,0 +1,10 @@
+CREATE TABLE object(
+	id INTEGER PRIMARY KEY NOT NULL,
+	name text NOT NULL,
+);
+
+CREATE TABLE slide(
+	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	object_id INTEGER NOT NULL,
+    file_name text NOT NULL
+);
