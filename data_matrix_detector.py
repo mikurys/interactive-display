@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from data_matrix_crypto import DataMatrixCrypto
+from info_displayer import *
 
 """data_matrix_detector.py: Can detext and read data matrix but not always.It would be good to improwe detect_matrix method.
 
@@ -13,6 +14,8 @@ class DataMatrixDetector:
         self.frame = None
         self.contours = None
         self.th = None
+        self.detected = False;
+        self.id = None
 
     def set_template(self, template):
         img = cv2.imread(template, 0)
@@ -62,6 +65,8 @@ class DataMatrixDetector:
         if self.check_matrix(matrix):
             print(True)
             print(DataMatrixCrypto.decode(self.turn_matrix(matrix)))
+            self.detected = True;
+            self.id = DataMatrixCrypto.decode(self.turn_matrix(matrix))
         else:
             print(False)
 
@@ -87,5 +92,7 @@ class DataMatrixDetector:
                 counter += 1
         if counter == 1:
             self.read_matrix(box)
+        if self.detected == True:
+            InfoDisplayer.display(self.id, self)
         frame = [self.frame]
 
