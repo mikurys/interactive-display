@@ -5,8 +5,8 @@ class DBConcetion:
     def __init__(self, data_base):
         self.connection = sqlite3.connect(data_base)
 
-    def insert_object(self, id, name):
-        self.connection.execute("INSERT INTO object (id, name) VALUES (" + id + ", '" + name + "')")
+    def insert_object(self, object_id, name):
+        self.connection.execute("INSERT INTO object (id, name) VALUES (" + object_id + ", '" + name + "')")
         self.connection.commit()
 
     def insert_slide(self, object_id, file_name):

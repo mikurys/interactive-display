@@ -60,26 +60,26 @@ class InteractiveDisplay(tk.Frame):
         w = evt.widget
         index = int(w.curselection()[0])
         item = w.get(index)
-        object = item.split(' - ')
-        self.object_id_entry.delete(0,tk.END)
-        self.object_id_entry.insert(0, object[0])
-        self.object_name_entry.delete(0,tk.END)
-        self.object_name_entry.insert(0, object[1])
+        element = item.split(' - ')
+        self.object_id_entry.delete(0, tk.END)
+        self.object_id_entry.insert(0, element[0])
+        self.object_name_entry.delete(0, tk.END)
+        self.object_name_entry.insert(0, element[1])
 
     def onselect_slide(self, evt):
         w = evt.widget
         index = int(w.curselection()[0])
         item = w.get(index)
         slide = item.split(' - ')
-        self.file_name_entry.delete(0,tk.END)
+        self.file_name_entry.delete(0, tk.END)
         self.file_name_entry.insert(0, slide[1])
         # self.variable.set(next((object for object, id in self.dict.items() if id == slide[0]), None))
 
     def add_object(self):
         self.db.insert_object(self.object_id_entry.get(), self.object_name_entry.get())
         DataMatrixCreator.create_data_matrix(600, self.object_id_entry.get(), 6)
-        self.object_id_entry.delete(0,tk.END)
-        self.object_name_entry.delete(0,tk.END)
+        self.object_id_entry.delete(0, tk.END)
+        self.object_name_entry.delete(0, tk.END)
         self.set_object_listbox()
         self.set_optionmenu()
 
@@ -91,7 +91,7 @@ class InteractiveDisplay(tk.Frame):
 
     def add_slide(self):
         self.db.insert_slide(self.dict[self.variable.get()], self.file_name_entry.get())
-        self.file_name_entry.delete(0,tk.END)
+        self.file_name_entry.delete(0, tk.END)
         self.set_slide_listbox()
 
     def delete_slide(self):
@@ -108,15 +108,15 @@ class InteractiveDisplay(tk.Frame):
     def set_object_listbox(self):
         self.object_listbox.delete(0, tk.END)
         temp_list = self.db.get_object_list()
-        list = ["" + str(record[0]) + " - " + record[1] for record in temp_list]
-        self.object_listbox.insert(tk.END, *list)
+        element = ["" + str(record[0]) + " - " + record[1] for record in temp_list]
+        self.object_listbox.insert(tk.END, *element)
         self.object_name_optionmenu.grid(row=3, column=7)
 
     def set_slide_listbox(self):
         self.slide_listbox.delete(0, tk.END)
         temp_list = self.db.get_slide_list()
-        list = ["" + str(record[1]) + " - " + record[2] for record in temp_list]
-        self.slide_listbox.insert(tk.END, *list)
+        slide = ["" + str(record[1]) + " - " + record[2] for record in temp_list]
+        self.slide_listbox.insert(tk.END, *slide)
 
     def run(self):
         detector = DataMatrixDetector(self.db)

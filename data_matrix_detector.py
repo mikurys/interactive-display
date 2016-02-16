@@ -3,7 +3,8 @@ import cv2
 from data_matrix_crypto import DataMatrixCrypto
 from info_displayer import *
 
-"""data_matrix_detector.py: Can detext and read data matrix but not always.It would be good to improwe detect_matrix method.
+"""data_matrix_detector.py: Can detext and read data matrix but not always.
+It would be good to improve detect_matrix method.
 
 __author__ = "Ryszard Mikulec" """
 
@@ -93,6 +94,6 @@ class DataMatrixDetector:
                 if self.read_matrix(box):
                     cv2.drawContours(self.frame, [box], 0, (0, 0, 255), 2)
                     cv2.drawContours(self.frame, cnt, -1, (255, 0, 0), 3)
-        if self.detected == True:
+        if self.detected:
             img = self.info_displayer.display(self.id, self.frame)
         frame = [self.frame]

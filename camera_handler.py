@@ -1,10 +1,11 @@
-#simple event-driven system for handling video cameras
-import cv2
+# simple event-driven system for handling video cameras
 import threading
 
-from data_matrix_detector import DataMatrixDetector
-#basic event system
-#usage inside the class
+import cv2
+
+
+# basic event system
+# usage inside the class
 # self.myevent = Event() //create new event
 # self.myevent += fun1() //assign first callback
 # self.myevent += fun2() //assign second callback
@@ -12,36 +13,37 @@ from data_matrix_detector import DataMatrixDetector
 # print(len(self.myevent)) //number of callback functions assigned to event
 class Event:
     def __init__(self):
-        self.handlers = set() #set is used so handler cannot be assinged more than one time
+        self.handlers = set()  # set is used so handler cannot be assinged more than one time
 
-    def Add(self, handler):
+    def add(self, handler):
         self.handlers.add(handler)
         return self
 
-    def Remove(self, handler):
+    def remove(self, handler):
         try:
             self.handlers.remove(handler)
         except:
             raise ValueError("Callback is not assigned to event.")
         return self
 
-    def Trigger(self, *args, **kargs):
+    def trigger(self, *args, **kwargs):
         for handler in self.handlers:
-            handler(*args, **kargs)
+            handler(*args, **kwargs)
 
-    def GetCount(self):
+    def get_count(self):
         return len(self.handlers)
 
-    __iadd__ = Add
-    __isub__ = Remove
-    __call__ = Trigger
-    __len__  = GetCount
+    __iadd__ = add
+    __isub__ = remove
+    __call__ = trigger
+    __len__ = get_count
 
-#when called it starts capturing video using new thread
+
+# when called it starts capturing video using new thread
+
 
 class Camera(threading.Thread):
-
-    def __init__(self,camera_number=0,window_name="window"):
+    def __init__(self, camera_number=0, window_name="window"):
         threading.Thread.__init__(self)
         self.video = None
         self.cam = camera_number
@@ -65,6 +67,7 @@ class Camera(threading.Thread):
         return ret
 
     def run(self):
+        # noinspection PyBroadException
         try:
             self.video = cv2.VideoCapture(self.cam)
             self.window = cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
@@ -73,12 +76,13 @@ class Camera(threading.Thread):
             return
         self.OnStart()
         while True:
+            # noinspection PyBroadException
             try:
                 if self.take_frame():
                     self.OnCapture(self.frame)
-                    if self.visible :
-                       self.OnUpdate()
-                       cv2.imshow(self.window_name, self.frame[0])
+                    if self.visible:
+                        self.OnUpdate()
+                        cv2.imshow(self.window_name, self.frame[0])
                     if cv2.waitKey(40) == 27:
                         self.OnClose()
                         break
@@ -89,9 +93,10 @@ class Camera(threading.Thread):
                 self.OnError()
 
     @staticmethod
-    def GetCount():
+    def get_count():
         n = 0
         for i in range(10):
+            # noinspection PyBroadException
             try:
                 cap = cv2.VideoCapture(i)
                 ret, frame = cap.read()
@@ -100,16 +105,6 @@ class Camera(threading.Thread):
                 cv2.destroyAllWindows()
                 n += 1
             except:
-                cap.release()
                 cv2.destroyAllWindows()
                 break
         return n
-
-
-
-if __name__ == "__main__":
-    detector = DataMatrixDetector()
-    detector.set_template("data_matrixes/template.jpg")
-    camera = Camera()
-    camera.OnCapture += detector.detect_matrix
-    camera.run()
