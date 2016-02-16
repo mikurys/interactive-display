@@ -4,6 +4,9 @@ from db_connection import DBConcetion
 from camera_handler import Camera
 from data_matrix_creator import DataMatrixCreator
 
+"""interactive_display.py: Graphical user interface.
+
+__author__ = "Ryszard Mikulec" """
 
 class InteractiveDisplay(tk.Frame):
     def __init__(self, master=None):
@@ -32,6 +35,9 @@ class InteractiveDisplay(tk.Frame):
         self.set_widgets()
 
     def set_widgets(self):
+	"""
+        Function set widgets parametrs.
+        """
         self.set_optionmenu()
         self.set_object_listbox()
         self.set_slide_listbox()
@@ -39,6 +45,9 @@ class InteractiveDisplay(tk.Frame):
         self.slide_listbox.bind('<<ListboxSelect>>', self.onselect_slide)
 
     def place_widgets(self):
+	"""
+        Function place widgets on window.
+        """
         self.run_detector.grid(row=0, columnspan=8)
         self.object_listbox.grid(row=1, column=0, columnspan=4)
         self.slide_listbox.grid(row=1, column=4, columnspan=4)
@@ -57,6 +66,9 @@ class InteractiveDisplay(tk.Frame):
         self.quit.grid(row=5, columnspan=8)
 
     def onselect_object(self, evt):
+	"""
+        Function handle oncelect event.
+        """
         w = evt.widget
         index = int(w.curselection()[0])
         item = w.get(index)
@@ -67,6 +79,9 @@ class InteractiveDisplay(tk.Frame):
         self.object_name_entry.insert(0, element[1])
 
     def onselect_slide(self, evt):
+	"""
+        Function handle oncelect event.
+        """
         w = evt.widget
         index = int(w.curselection()[0])
         item = w.get(index)
@@ -76,6 +91,9 @@ class InteractiveDisplay(tk.Frame):
         # self.variable.set(next((object for object, id in self.dict.items() if id == slide[0]), None))
 
     def add_object(self):
+	"""
+        Function handle add_object_button and insert data to data base.
+        """
         self.db.insert_object(self.object_id_entry.get(), self.object_name_entry.get())
         DataMatrixCreator.create_data_matrix(600, self.object_id_entry.get(), 6)
         self.object_id_entry.delete(0, tk.END)
@@ -84,21 +102,33 @@ class InteractiveDisplay(tk.Frame):
         self.set_optionmenu()
 
     def delete_object(self):
+	"""
+        Function handle delete_object_button and delete data from data base.
+        """
         self.db.delete_object(self.object_id_entry.get())
         DataMatrixCreator.remove_data_matrix(self.object_id_entry.get())
         self.set_object_listbox()
         self.set_optionmenu()
 
     def add_slide(self):
+	"""
+        Function handle add_slide_button and insert data to data base.
+        """
         self.db.insert_slide(self.dict[self.variable.get()], self.file_name_entry.get())
         self.file_name_entry.delete(0, tk.END)
         self.set_slide_listbox()
 
     def delete_slide(self):
+	"""
+        Function handle delete_slide_button and delete data from data base.
+        """
         self.db.delete_slide(self.file_name_entry.get())
         self.set_slide_listbox()
 
     def set_optionmenu(self):
+	"""
+        Function set optionmenu.
+        """
         temp_list = self.db.get_object_list()
         self.dict = {row[1]: row[0] for row in temp_list}
         self.variable.set(list(self.dict.keys())[0])
@@ -106,6 +136,9 @@ class InteractiveDisplay(tk.Frame):
         self.object_name_optionmenu.grid(row=3, column=7)
 
     def set_object_listbox(self):
+	"""
+        Function set object_listbox.
+        """
         self.object_listbox.delete(0, tk.END)
         temp_list = self.db.get_object_list()
         element = ["" + str(record[0]) + " - " + record[1] for record in temp_list]
@@ -113,14 +146,20 @@ class InteractiveDisplay(tk.Frame):
         self.object_name_optionmenu.grid(row=3, column=7)
 
     def set_slide_listbox(self):
+	"""
+        Function set slide_listbox.
+        """
         self.slide_listbox.delete(0, tk.END)
         temp_list = self.db.get_slide_list()
         slide = ["" + str(record[1]) + " - " + record[2] for record in temp_list]
         self.slide_listbox.insert(tk.END, *slide)
 
     def run(self):
+	"""
+        Function handle run_detector_button.
+        """
         detector = DataMatrixDetector(self.db)
-        detector.set_template("../template.jpg")
+        detector.set_template("data_matrixes/template.jpg")
         camera = Camera()
         camera.OnCapture += detector.detect_matrix
         camera.run()

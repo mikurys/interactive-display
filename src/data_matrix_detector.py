@@ -20,6 +20,10 @@ class DataMatrixDetector:
         self.id = None
 
     def set_template(self, template):
+	""" param template string like 'path/filename' of template image
+
+        Function set template that will be used to detect matrix.
+        """
         img = cv2.imread(template, 0)
         blur = cv2.GaussianBlur(img, (5, 5), 0)
         ret, thtemplate = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -28,6 +32,11 @@ class DataMatrixDetector:
         print(len(self.contours))
 
     def check_matrix(self, matrix):
+	""" param matrix
+            Return true if matrix is data matrix or false if not
+
+        Function verify matrix are data matrix.
+        """
         for i in range(self.size):
             if (matrix[0][i] + matrix[-1][i] == i % 2 or matrix[0][i] + matrix[-1][i] == (i + 1) % 2) and (
                                 matrix[i][0] + matrix[i][-1] == i % 2 or matrix[i][0] + matrix[i][-1] == (i + 1) % 2):
@@ -41,6 +50,11 @@ class DataMatrixDetector:
         return True
 
     def turn_matrix(self, matrix):
+	""" param matrix
+            Return well oriented matrix
+
+        Function make matrix well oriented.
+        """
         if matrix[0][0] == 1:
             tab = [[(matrix[-j - 1][i] + 1) % 2 for j in range(self.size)] for i in range(self.size)]
         elif matrix[0][1] == 1:
@@ -53,6 +67,11 @@ class DataMatrixDetector:
         return tab
 
     def read_matrix(self, rect):
+	""" param rect is two dimention array with point of a rectangle surrounding matrix area on image
+            Return true if matrix is read succesfully or false if not
+
+        Function read matrix in selected area.
+        """
         wx = (rect[1][0] - rect[0][0]) / self.size
         wy = (rect[1][1] - rect[0][1]) / self.size
         vx = (rect[3][0] - rect[0][0]) / self.size
@@ -76,6 +95,10 @@ class DataMatrixDetector:
             return False
 
     def take_contours(self):
+	""" Return contours of objects find on image
+
+        Function find contours on image
+        """
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
         ret, self.th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -83,6 +106,10 @@ class DataMatrixDetector:
         return [contour for contour in contours if 1000 < cv2.contourArea(contour) < 150000]
 
     def detect_matrix(self, frame):
+	""" param frame is image where matrix is detecting
+
+        Function detext matrix on image.
+        """
         self.frame = frame[0]
         contours = self.take_contours()
         for cnt, cnt2 in zip(contours, self.contours):

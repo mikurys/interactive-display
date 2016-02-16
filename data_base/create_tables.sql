@@ -6,5 +6,5 @@ CREATE TABLE object(
 CREATE TABLE slide(
 	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	object_id INTEGER NOT NULL,
-    file_name text NOT NULL
+    	file_name text NOT NULL
 );
