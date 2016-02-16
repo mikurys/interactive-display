@@ -42,6 +42,9 @@ class DataMatrixCrypto:
         j=1;
         k=15;
         while (k>=0):
+            if(k==0):
+                if (twoDimArray[i][j]==0):
+                    break;
             if (j==5):
                 j=1;
                 i=i+1;
