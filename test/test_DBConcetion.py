@@ -1,21 +1,81 @@
 from unittest import TestCase
+from db_connection import DBConnection
 
 
-class TestDBConcetion(TestCase):
+class TestDBConnection(TestCase):
+
     def test_insert_object(self):
-        self.fail()
+        db = DBConnection("data_base/test_base.db")
+        self.assertTrue(db.get_object_count() == 0)
+        db.insert_object(1, "1")
+        self.assertTrue(db.get_object_count() == 1)
+        self.assertTrue(db.get_object_name(1) == "1")
+        db.clear()
+        self.assertTrue(db.get_object_count() == 0)
 
     def test_insert_slide(self):
-        self.fail()
+        db = DBConnection("data_base/test_base.db")
+        self.assertTrue(db.get_slide_count() == 0)
+        db.insert_slide(1, "1")
+        self.assertTrue(db.get_slide_count() == 1)
+        self.assertTrue(db.get_slide_name(1) == "1")
+        db.clear()
+        self.assertTrue(db.get_slide_count() == 0)
 
     def test_get_object_list(self):
-        self.fail()
+        db = DBConnection("data_base/test_base.db")
+        self.assertTrue(db.get_object_count() == 0)
+        db.insert_object(1, "1")
+        db.insert_object(2, "2")
+        db.insert_object(3, "3")
+        db.insert_object(4, "4")
+        db.insert_object(5, "5")
+        db.insert_object(6, "6")
+        self.assertTrue(db.get_object_count() == 6)
+        test_list = db.get_object_count()
+        self.assertTrue(test_list[0] == "1")
+        self.assertTrue(test_list[1] == "2")
+        self.assertTrue(test_list[2] == "3")
+        self.assertTrue(test_list[3] == "4")
+        self.assertTrue(test_list[4] == "5")
+        self.assertTrue(test_list[5] == "6")
+        db.clear()
+        self.assertTrue(db.get_object_count() == 0)
 
     def test_delete_object(self):
-        self.fail()
+        db = DBConnection("data_base/test_base.db")
+        self.assertTrue(db.get_object_count() == 0)
+        db.insert_object(1, "1")
+        self.assertTrue(db.get_object_count() == 1)
+        self.assertTrue(db.get_object_name(1) == "1")
+        db.delete_object(1)
+        self.assertTrue(db.get_object_count() == 0)
 
     def test_get_slide_list(self):
-        self.fail()
+        db = DBConnection("data_base/test_base.db")
+        self.assertTrue(db.get_slide_count() == 0)
+        db.insert_slide(1, "1")
+        db.insert_slide(2, "2")
+        db.insert_slide(3, "3")
+        db.insert_slide(4, "4")
+        db.insert_slide(5, "5")
+        db.insert_slide(6, "6")
+        self.assertTrue(db.get_slide_count() == 6)
+        test_list = db.get_object_count()
+        self.assertTrue(test_list[0] == "1")
+        self.assertTrue(test_list[1] == "2")
+        self.assertTrue(test_list[2] == "3")
+        self.assertTrue(test_list[3] == "4")
+        self.assertTrue(test_list[4] == "5")
+        self.assertTrue(test_list[5] == "6")
+        db.clear()
+        self.assertTrue(db.get_object_count() == 0)
 
     def test_delete_slide(self):
-        self.fail()
+        db = DBConnection("data_base/test_base.db")
+        self.assertTrue(db.get_slide_count() == 0)
+        db.insert_slide(1, "1")
+        self.assertTrue(db.get_slide_count() == 1)
+        self.assertTrue(db.get_slide_name(1) == "1")
+        db.delete_slide(1)
+        self.assertTrue(db.get_slide_count() == 0)
