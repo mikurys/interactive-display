@@ -31,5 +31,3 @@ class TestDataMatrixCrypto(TestCase):
         matrix = DataMatrixCrypto.encode(before)
         after = DataMatrixCrypto.decode(matrix)
         self.assertTrue(before == after)
-
-

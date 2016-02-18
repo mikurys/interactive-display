@@ -1,4 +1,7 @@
 from unittest import TestCase
+import sys
+sys.path.append("../src/")
+
 from camera_handler import Event
 
 
