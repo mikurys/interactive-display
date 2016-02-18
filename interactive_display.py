@@ -1,6 +1,6 @@
 import tkinter as tk
 from data_matrix_detector import DataMatrixDetector
-from db_connection import DBConcetion
+from db_connection import DBConnection
 from camera_handler import Camera
 from data_matrix_creator import DataMatrixCreator
 
@@ -8,9 +8,10 @@ from data_matrix_creator import DataMatrixCreator
 
 __author__ = "Ryszard Mikulec" """
 
+
 class InteractiveDisplay(tk.Frame):
     def __init__(self, master=None):
-        self.db = DBConcetion("data_base/base.db")
+        self.db = DBConnection("data_base/base.db")
         tk.Frame.__init__(self, master)
         self.pack()
         self.run_detector = tk.Button(self, text="Run detector", command=self.run)
