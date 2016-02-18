@@ -35,7 +35,7 @@ class InteractiveDisplay(tk.Frame):
         self.set_widgets()
 
     def set_widgets(self):
-	"""
+        """
         Function set widgets parametrs.
         """
         self.set_optionmenu()
@@ -45,7 +45,7 @@ class InteractiveDisplay(tk.Frame):
         self.slide_listbox.bind('<<ListboxSelect>>', self.onselect_slide)
 
     def place_widgets(self):
-	"""
+        """
         Function place widgets on window.
         """
         self.run_detector.grid(row=0, columnspan=8)
@@ -66,7 +66,7 @@ class InteractiveDisplay(tk.Frame):
         self.quit.grid(row=5, columnspan=8)
 
     def onselect_object(self, evt):
-	"""
+        """
         Function handle oncelect event.
         """
         w = evt.widget
@@ -79,7 +79,7 @@ class InteractiveDisplay(tk.Frame):
         self.object_name_entry.insert(0, element[1])
 
     def onselect_slide(self, evt):
-	"""
+        """
         Function handle oncelect event.
         """
         w = evt.widget
@@ -91,7 +91,7 @@ class InteractiveDisplay(tk.Frame):
         # self.variable.set(next((object for object, id in self.dict.items() if id == slide[0]), None))
 
     def add_object(self):
-	"""
+        """
         Function handle add_object_button and insert data to data base.
         """
         self.db.insert_object(self.object_id_entry.get(), self.object_name_entry.get())
@@ -102,7 +102,7 @@ class InteractiveDisplay(tk.Frame):
         self.set_optionmenu()
 
     def delete_object(self):
-	"""
+        """
         Function handle delete_object_button and delete data from data base.
         """
         self.db.delete_object(self.object_id_entry.get())
@@ -111,7 +111,7 @@ class InteractiveDisplay(tk.Frame):
         self.set_optionmenu()
 
     def add_slide(self):
-	"""
+        """
         Function handle add_slide_button and insert data to data base.
         """
         self.db.insert_slide(self.dict[self.variable.get()], self.file_name_entry.get())
@@ -119,14 +119,14 @@ class InteractiveDisplay(tk.Frame):
         self.set_slide_listbox()
 
     def delete_slide(self):
-	"""
+        """
         Function handle delete_slide_button and delete data from data base.
         """
         self.db.delete_slide(self.file_name_entry.get())
         self.set_slide_listbox()
 
     def set_optionmenu(self):
-	"""
+        """
         Function set optionmenu.
         """
         temp_list = self.db.get_object_list()
@@ -136,7 +136,7 @@ class InteractiveDisplay(tk.Frame):
         self.object_name_optionmenu.grid(row=3, column=7)
 
     def set_object_listbox(self):
-	"""
+        """
         Function set object_listbox.
         """
         self.object_listbox.delete(0, tk.END)
@@ -146,7 +146,7 @@ class InteractiveDisplay(tk.Frame):
         self.object_name_optionmenu.grid(row=3, column=7)
 
     def set_slide_listbox(self):
-	"""
+        """
         Function set slide_listbox.
         """
         self.slide_listbox.delete(0, tk.END)
@@ -155,7 +155,7 @@ class InteractiveDisplay(tk.Frame):
         self.slide_listbox.insert(tk.END, *slide)
 
     def run(self):
-	"""
+        """
         Function handle run_detector_button.
         """
         detector = DataMatrixDetector(self.db)

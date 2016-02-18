@@ -1,6 +1,6 @@
 # simple event-driven system for handling video cameras
 import threading
-
+import logging
 import cv2
 
 
@@ -11,6 +11,7 @@ import cv2
 # self.myevent += fun2() //assign second callback
 # self.myevent -= fun2() //remove second callback
 # print(len(self.myevent)) //number of callback functions assigned to event
+
 class Event:
     def __init__(self):
         self.handlers = set()  # set is used so handler cannot be assinged more than one time
@@ -39,17 +40,16 @@ class Event:
     __len__ = get_count
 
 
-# when called it starts capturing video using new thread
-
-
 class Camera(threading.Thread):
     def __init__(self, camera_number=0, window_name="window"):
+        """
+            Starts new thread and creates events
+        """
         threading.Thread.__init__(self)
         self.video = None
         self.cam = camera_number
         self.window = None
         self.frame = None
-        self.oldframe = None
         self.contours = None
         self.th = None
         self.visible = True
@@ -67,16 +67,18 @@ class Camera(threading.Thread):
         return ret
 
     def run(self):
-        # noinspection PyBroadException
+        """
+            Starts main loop
+        """
         try:
             self.video = cv2.VideoCapture(self.cam)
             self.window = cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
-        except:
+        except cv2.error as e:
+            logging.error(logging.error("Error occured during setting up camera: " + e))
             self.OnError()
             return
         self.OnStart()
         while True:
-            # noinspection PyBroadException
             try:
                 if self.take_frame():
                     self.OnCapture(self.frame)
@@ -85,15 +87,22 @@ class Camera(threading.Thread):
                         cv2.imshow(self.window_name, self.frame[0])
                     if cv2.waitKey(40) == 27:
                         self.OnClose()
+                        logging.info("Main loop closed by user")
                         break
                 else:
                     self.OnClose()
                     break
-            except:
+            except cv2.error as e:
+                logging.error(logging.error("Error occured during camera operation: " + e))
                 self.OnError()
+
+    # get camera count
 
     @staticmethod
     def get_count():
+        """
+            Gets number of available cameras
+        """
         n = 0
         for i in range(10):
             # noinspection PyBroadException

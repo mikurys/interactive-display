@@ -1,7 +1,9 @@
+import logging
 import cv2
 
 
 class InfoDisplayer:
+
     def __init__(self, db, path='slides/'):
         self.path = path
         temp_list = db.get_object_list()
@@ -12,7 +14,7 @@ class InfoDisplayer:
 
     def display(self, slide_id, img_dst):
         filename = self.get_slide_name(slide_id)
-        if filename == '':
+        if not filename:
             return img_dst
         # noinspection PyBroadException
         try:
@@ -21,7 +23,7 @@ class InfoDisplayer:
             y_offset = (img_dst.shape[0] - img_src.shape[0]) // 2
             img_dst[y_offset:y_offset+img_src.shape[0], x_offset:x_offset+img_src.shape[1]] = img_src
         except:
-            print("Slide file not found")
+            logging.error("Slide file: " + filename + "not found")
         return img_dst
 
     def get_slide_name(self, slide_id):
@@ -51,7 +53,6 @@ class InfoDisplayer:
                 is_current_find = True
                 continue
             if is_current_find and slide[1] == element[0]:
-                print("ERROR "*100)
-                print(slide[2])
+                logging.error("Internal error: get_next found wrong element")
                 return slide[2]
         return self.get_first(element)
