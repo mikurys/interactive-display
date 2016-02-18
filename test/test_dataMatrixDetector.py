@@ -15,7 +15,7 @@ class TestDataMatrixDetector(TestCase):
         det.set_template("../data_matrixes/template.jpg")
 
         pass
-    
+
     def test_check_matrix(self):
         self.fail()
 
@@ -29,4 +29,13 @@ class TestDataMatrixDetector(TestCase):
         self.fail()
 
     def test_detect_matrix(self):
-        self.fail()
+        #you should take a picture and name it test.jpg"
+        pass
+        capture = cv2.imread("test.jpg")
+        db = DBConnection("../data_base/test_base.db")
+        det = DataMatrixDetector(db)
+        det.set_template("../data_matrixes/template.jpg")
+        capture = det.detect_matrix([capture])
+
+if __name__ == "__main__":
+    unittest.main()
