@@ -17,6 +17,7 @@ class Event:
         self.handlers = set()  # set is used so handler cannot be assinged more than one time
 
     def add(self, handler):
+
         self.handlers.add(handler)
         return self
 
@@ -74,7 +75,7 @@ class Camera(threading.Thread):
             self.video = cv2.VideoCapture(self.cam)
             self.window = cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
         except cv2.error as e:
-            logging.error(logging.error("Error occured during setting up camera: " + e))
+            logging.error(logging.error("Error occured during setting up camera: " + e.args[0]))
             self.OnError()
             return
         self.OnStart()
@@ -93,7 +94,7 @@ class Camera(threading.Thread):
                     self.OnClose()
                     break
             except cv2.error as e:
-                logging.error(logging.error("Error occured during camera operation: " + e))
+                logging.error(logging.error("Error occured during camera operation: " + e.args[0]))
                 self.OnError()
 
     # get camera count
@@ -116,4 +117,5 @@ class Camera(threading.Thread):
             except:
                 cv2.destroyAllWindows()
                 break
+        logging.debug("Cameras detected - "+str(n))
         return n
